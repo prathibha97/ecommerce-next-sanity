@@ -11,24 +11,34 @@ export const StateContext = ({ children }) => {
     const [qty, setQty] = useState(1)
 
     const onAdd = (product, quantity) => {
-        const checkProductInCart = cartItems.find((item) => item._id === product._id)
+        const checkProductInCart = cartItems.find(
+            (item) => item._id === product._id,
+        );
 
-        setTotalPrice((prevTotalPrice) => prevTotalPrice + product.price * quantity)
-        setTotalQuantities((prevTotalQuantity) => prevTotalQuantity + quantity)
+
         if (checkProductInCart) {
 
             const updatedCartItems = cartItems.map((cartProduct) => {
-                if (cartProduct._id === product._id) return {
-                    ...cartProduct,
-                    quantity: cartProduct.quantity + quantity
+                if (cartProduct._id === product._id) {
+                    const newQty = item.quantity + quantity;
+                    return {
+                        ...cartProduct,
+                        quantity: newQty,
+                    }
+                } else {
+                    return {
+                        ...cartProduct
+                    }
                 }
             })
             setCartItems(updatedCartItems)
         }
         else {
             product.quantity = quantity
-            setCartItems(...cartItems, { ...product })
+            setCartItems([...cartItems, { ...product }])
         }
+        setTotalPrice((prevTotalPrice) => prevTotalPrice + product.price * quantity)
+        setTotalQuantities((prevTotalQuantity) => prevTotalQuantity + quantity)
         toast.success(`${qty} ${product.name} added to the cart`)
     }
 
